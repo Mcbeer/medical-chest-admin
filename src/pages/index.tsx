@@ -7,7 +7,11 @@ import { GuideListItem } from "../components/GuideList";
 import { api } from "../utils/api";
 
 const Home: NextPage = () => {
-  const { data } = api.guides.getAll.useQuery();
+  const { data: userData } = api.auth.user.useQuery();
+
+  const { data, isLoading } = api.guides.getAll.useQuery(undefined, {
+    enabled: userData?.id ? true : false,
+  });
 
   return (
     <>
@@ -24,8 +28,13 @@ const Home: NextPage = () => {
 
           <div className="h-full overflow-hidden">
             <ul className="h-full overflow-y-auto overflow-x-hidden">
+              {isLoading && <div>Henter vejledninger...</div>}
+              {data?.length === 0 && !isLoading && (
+                <div>Ingen vejledninger fundet</div>
+              )}
               {data?.map((guide) => (
                 <GuideListItem
+                  guideData={guide}
                   key={guide.id}
                   guideId={guide.id}
                   guideName={guide.name}

@@ -4,7 +4,10 @@ import { parseExcelFile } from "../lib/parseExcelFile";
 import { api } from "../utils/api";
 
 export const UploadFile = () => {
-  const { mutate } = api.guides.addGuides.useMutation();
+  const { refetch } = api.guides.getAll.useQuery();
+  const { mutate, isLoading } = api.guides.addGuides.useMutation({
+    onSuccess: () => refetch(),
+  });
 
   const onDrop = useCallback(
     (files: File[]) => {
@@ -36,17 +39,25 @@ export const UploadFile = () => {
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
+  const getLabel = () => {
+    if (isDragActive) {
+      return <p>Placér filen her</p>;
+    }
+
+    if (isLoading) {
+      return <p>Indlæser</p>;
+    }
+
+    return <p>Træk filen du vil uploade her - Eller klik her for at uploade</p>;
+  };
+
   return (
     <div
       {...getRootProps()}
-      className="flex h-full cursor-pointer items-center justify-center bg-blue-700 p-16 text-blue-50"
+      className="bg-blue-700 text-blue-50 flex h-full cursor-pointer items-center justify-center p-16"
     >
       <input {...getInputProps()} />
-      {isDragActive ? (
-        <p>Placér filen her</p>
-      ) : (
-        <p>Træk filen du vil uploade her - Eller klik her for at uploade</p>
-      )}
+      {getLabel()}
     </div>
   );
 };

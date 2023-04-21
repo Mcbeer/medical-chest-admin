@@ -17,7 +17,7 @@ export const parseExcelFile = (data: string | ArrayBuffer) => {
 
   const sheetsAsJSON = sheets.map((sheet) => xlsx.utils.sheet_to_json(sheet));
 
-  const firstSheet = sheetsAsJSON[1] as Record<
+  const firstSheet = sheetsAsJSON[0] as Record<
     "Medicinkiste" | "__EMPTY" | "__EMPTY_1" | "__EMPTY_2",
     string
   >[];

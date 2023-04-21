@@ -11,6 +11,9 @@ module.exports = {
       gridTemplateRows: {
         layout: "5rem 1fr",
       },
+      gridTemplateColumns: {
+        dialogList: "1fr 2fr",
+      },
     },
   },
   plugins: [],
